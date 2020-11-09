@@ -1,0 +1,221 @@
+.cv {
+    padding: 60px 60px 60px 60px;
+    background-color: white !important;
+    box-sizing: border-box;
+    resize: horizontal;
+    overflow: none;
+    height: calc(100vh - 60px);
+    padding-bottom: 56.25%;
+}
+
+.cv > * > *:not(.btn) {
+    padding: 15px 15px 15px 15px;
+}
+.cv > * {
+    padding: 15px 15px 15px 15px;
+}
+
+.cv *:not(.btn):not(img) {
+    background-color: white;
+}
+
+.name {
+    display: block;
+    text-transform: uppercase;
+    border: 0px;
+    
+    font-family: Rubik;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 42px;
+    line-height: 50px;
+
+    /* identical to box height, or 119% */
+}
+
+.duoconfirmbutton {
+
+}
+
+.subtext {
+    display: block;
+    text-transform: capitalize;
+    border: 0px;
+    
+    font-family: Rubik;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 25px;
+    
+    /* identical to box height, or 119% */
+    
+    /* Enhancv Context Info */
+    color: #3F9CDC;
+}
+
+input {
+    width: 85%;
+}
+
+.circled {
+    border-radius: 200px;
+}
+
+.contact {    
+    display: inline-block;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 20px;
+
+    /* identical to box height, or 167% */
+
+    /* Enhancv Paragraphs */
+    color: #384347;
+    border: 0px;
+}
+
+.profile-image {
+    display: flex;
+    flex-direction: row;
+}
+
+.sectionContainer {
+    /*padding-top: 40px;*/
+}
+
+.section .entity {
+    position: relative;
+    left: -15px;
+    width: calc(100% + 30px);
+    overflow: hidden;
+    padding: 15px 15px;
+}
+
+.section .entity textarea {
+    width: 100%;
+}
+
+.sectionTitle {
+    margin-bottom: 15px;
+    font-family: Rubik;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 33px;
+
+    /* Enhancv Headings */
+    display: block;
+    color: #2D3639;
+    border-bottom: 3px solid #2D3639;
+}
+
+.experienceTitle {
+    font-family: Rubik;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 22px;
+    line-height: 26px;
+    border: 0px;
+    display: block;
+    /* Enhancv Headings */
+    color: #2D3639;
+}
+
+.experienceCompany {
+    font-family: Rubik;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 22px;
+
+    border: 0px;
+    display: block;
+    /* identical to box height, or 137% */
+
+    /* Enhancv Context Info */
+    color: #3F9CDC;
+}
+
+.experiencePeriod, .experienceLocation {
+    width: 40%;
+    border: 0px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 20px;
+
+    /* identical to box height, or 167% */
+
+    /* Enhancv Paragraphs */
+    color: #384347;
+    display: inline-block;
+}
+
+.experienceDescription {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 13px;
+    line-height: 20px;
+
+    border: 0px;
+    display: block;
+
+    /* identical to box height, or 154% */
+
+    /* Enhancv Paragraphs */
+    color: #384347;
+}
+
+.entity {
+    height: auto;
+    overflow: visible !important;
+}
+
+.actions {
+    position: relative;
+    width: 100% !important;
+    height: 38px !important;
+    z-index: 30000;
+    background-color: transparent !important;
+    top: calc(-38px * 2 / 2);
+    padding: 0 calc(50% - 170px / 2);
+    margin: 0 auto;
+    overflow: visible;
+    border-radius: 30px 0px 0px 30px;
+}
+
+.entity > *:not(.actions) {
+    position: relative;
+    top: calc(-38px);
+}
+
+.entity {
+    position: relative;
+    height: calc(100% - 2 * 38px);
+}
+
+.actions .btn-success {
+    background: #56BD94;
+    color: white;
+    border-radius: 30px 30px 30px 30px;
+}
+
+.actions .btn-secondary {
+    background: #FFFFFF;
+    border-radius: 0px;
+    color: black;
+    border-radius: 30px 30px 30px 30px;
+}
+
+.error {
+    background-color: rgba(235, 87, 87, 0.33) !important;
+}
+
+.error:hover, .error:focus {
+    background-color: rgba(235, 87, 87, 0.66) !important;
+}
