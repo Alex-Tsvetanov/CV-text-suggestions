@@ -20,12 +20,14 @@ import date from './icons/date.svg'
 import plus from './icons/plus.svg'
 import trash from './icons/trash.svg'
 
-import { render, unstable_renderSubtreeIntoContainer } from 'react-dom';
+import newId from './utils/newid';
 
-const SectionTitle = ({ children }) => (
+import { unmountComponentAtNode, render, unstable_renderSubtreeIntoContainer } from 'react-dom';
+
+const SectionTitle = (props) => (
     <>
         <div className="sectionTitle">
-            {children}
+            {props.children} <Image src={plus} style={{background: '#56BD94'}} onClick={props.add}></Image>
         </div>
     </>
 )
@@ -33,7 +35,7 @@ const SectionTitle = ({ children }) => (
 const Section = (props) => (
     <>
         <Col sm="6" className="section">
-            <SectionTitle>{props.name}</SectionTitle>
+            <SectionTitle add={props.add}>{props.name}</SectionTitle>
             {props.children}
         </Col>
     </>
@@ -70,24 +72,29 @@ class ExperienceEntity extends React.Component {
     constructor(props) {
         super(props);
         this.props = props;
+        this.data = props.data;
         this.state = {
             isFocused: false,
-            title: React.createRef(),
-            company: React.createRef(),
-            period: React.createRef(),
-            location: React.createRef(),
-            description: React.createRef(),
+            title: this.data().title,
+            company: this.data().company,
+            period: this.data().period,
+            location: this.data().location,
+            description: this.data().description,
             titleValue: '',
             companyValue: '',
             periodValue: '',
             locationValue: '',
             descriptionValue: '',
-          };
+        };
+        this.id = props.data().id;
         this.setState (this.state);
         this.focus = this.focus.bind(this);
         this.unfocus = this.unfocus.bind(this);
         this.styles = this.styles.bind(this);
+        this.save = this.save.bind(this);
+        this.deleteElement = props.deleteElement;
         this.onInputchange = this.onInputchange.bind(this);
+        console.log ("EXP ID", props.data().id, this.id, 'DATA', this.data(), props.data());
     }
     f = function (x) {
         if (x !== undefined)
@@ -131,15 +138,10 @@ class ExperienceEntity extends React.Component {
             this.state.isFocused = true;
             this.setState({
                 isFocused: true,
-                title: this.state.title,
                 titleValue: this.f(this.state.title),
-                company: this.state.company,
                 companyValue: this.f(this.state.company),
-                period: this.state.period,
                 periodValue: this.f(this.state.period),
-                location: this.state.location,
                 locationValue: this.f(this.state.location),
-                description: this.state.location,
                 descriptionValue: this.f(this.state.description),
             });
             console.log (this.state);
@@ -158,15 +160,10 @@ class ExperienceEntity extends React.Component {
             this.state.isFocused = false;     
             this.setState({
                 isFocused: false,
-                title: this.state.title,
                 titleValue: this.f(this.state.title),
-                company: this.state.company,
                 companyValue: this.f(this.state.company),
-                period: this.state.period,
                 periodValue: this.f(this.state.period),
-                location: this.state.location,
                 locationValue: this.f(this.state.location),
-                description: this.state.location,
                 descriptionValue: this.f(this.state.description),
             });  
             console.log (this.state);
@@ -179,7 +176,12 @@ class ExperienceEntity extends React.Component {
         });
     }
 
+    save = function () {
+        this.unfocus();
+    }
+
     render = function () {
+        console.log (this.deleteElement, this.props.deleteElement);
         let items = <>
             <ExperienceItem name="titleValue" callback={this.onInputchange} onClick={this.focus} className="experienceTitle" ref={this.state.title}>Title</ExperienceItem>
             <ExperienceItem name="companyValue" callback={this.onInputchange} onClick={this.focus} className="experienceCompany" ref={this.state.company}>Company name</ExperienceItem>
@@ -212,8 +214,8 @@ class ExperienceEntity extends React.Component {
                     backgroundColor:'transperant'
                 }}>
                 <ButtonGroup className="actions" style={this.state.isFocused ? {visibility: 'visible'} : {visibility: 'hidden'} } aria-label="Basic example">
-                    <Button onClick={this.unfocus} variant="success"><Image src={plus} /> New entry</Button>
-                    <Button onClick={this.unfocus} variant="secondary"><Image src={trash} /> </Button>
+                    <Button onClick={this.save} variant="success"><Image src={plus} /> New entry</Button>
+                    <Button onClick={()=>this.props.deleteElement(this.id)} variant="secondary"><Image src={trash} /> </Button>
                 </ButtonGroup>
                 <div style={this.state.isFocused ? {display: 'none'} : {display: 'block'} }>
                     {values}
@@ -227,44 +229,83 @@ class ExperienceEntity extends React.Component {
     }
 }
 
-const CV = function (props) {
-    const focus = props.focus;
-  return (
-    <>
-        <Container className="cv">
-            <Row className="personal">
-                <Col md="10">
-                    <input className="name" placeholder="Your name" />
-                    <input className="subtext" placeholder="Your next desired role?" />
-                    <Row>
-                        <Col sm="4">
-                            <img src={phone} alt="Phone" /> <input className="contact" placeholder="Phone" />
+class CV extends React.Component {
+    constructor (props)
+    {
+        super (props);
+        this.focus = props.focus;
+        this.state = {
+            ExperienceEntities: [],
+        };
+        this.addExperience = this.addExperience.bind(this);
+        console.log (this.focus);
+    }
+
+    addExperience = function () {
+        console.log ('adding');
+        this.setState({
+            ExperienceEntities: this.state.ExperienceEntities.concat([{
+                id: newId(),
+                title: React.createRef(),
+                company: React.createRef(),
+                period: React.createRef(),
+                location: React.createRef(),
+                description: React.createRef(),
+            }])
+        });
+        console.log (this.state.ExperienceEntities);
+    }
+
+    deleteElement = function (id) {
+        console.log ('id', id, 'element', document.getElementById(id));
+        document.getElementById(id).remove(document.getElementById(id));
+    }
+
+    render() {
+        console.log (this.focus);
+        return (
+            <>
+                <Container className="cv">
+                    <Row className="personal">
+                        <Col md="10">
+                            <input className="name" placeholder="Your name" />
+                            <input className="subtext" placeholder="Your next desired role?" />
+                            <Row>
+                                <Col sm="4">
+                                    <img src={phone} alt="Phone" /> <input className="contact" placeholder="Phone" />
+                                </Col>
+                                <Col sm="4">
+                                    <img src={email} alt="Email" /> <input className="contact" placeholder="Email" />
+                                </Col>
+                            </Row>
+                            <Row>
+                                <Col sm="4">
+                                    <img src={website} alt="Website/Link" /> <input className="contact" placeholder="Website/Link" />
+                                </Col>
+                                <Col sm="4">
+                                    <img src={location} alt="Location" /> <input className="contact" placeholder="Location" />
+                                </Col>
+                            </Row>
                         </Col>
-                        <Col sm="4">
-                            <img src={email} alt="Email" /> <input className="contact" placeholder="Email" />
+                        <Col md="2">
+                            <Image className="circled profiel-iamge" src={userphoto} alt="User picture" fluid />
                         </Col>
                     </Row>
-                    <Row>
-                        <Col sm="4">
-                            <img src={website} alt="Website/Link" /> <input className="contact" placeholder="Website/Link" />
-                        </Col>
-                        <Col sm="4">
-                            <img src={location} alt="Location" /> <input className="contact" placeholder="Location" />
-                        </Col>
+                    <Row className="sectionContainer">
+                        <Section name="Experience" add={this.addExperience}>
+                            {this.state.ExperienceEntities.map((_, index) => (
+                                <div id={this.state.ExperienceEntities[index].id}>
+                                    <ExperienceEntity deleteElement={(x)=>{this.focus(); this.deleteElement(x);}} data={(obj) => {
+                                        return this.state.ExperienceEntities[index]
+                                    }} onClick={this.focus}></ExperienceEntity>
+                                </div>
+                            ))}
+                        </Section>
                     </Row>
-                </Col>
-                <Col md="2">
-                    <Image className="circled profiel-iamge" src={userphoto} alt="User picture" fluid />
-                </Col>
-            </Row>
-            <Row className="sectionContainer">
-                <Section name="Experience">
-                    <ExperienceEntity onClick={focus}></ExperienceEntity>
-                </Section>
-            </Row>
-        </Container>
-    </>
-  );
+                </Container>
+            </>
+        );
+    }
 }
 
 export default CV;
