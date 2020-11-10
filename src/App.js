@@ -14,14 +14,13 @@ import NavItem from 'react-bootstrap/NavItem'
 import NavLink from 'react-bootstrap/NavLink'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
-import MistakeTrigger from './Mistake.js'
 
 import logo from './icons/logo.svg'
 import profile from './icons/profile.svg'
 import bell from './icons/bell.svg'
 import success from './icons/success.svg'
 
-import './App.css';
+import './css/App.css';
 import CV from './CV'
 
 class App extends React.Component {
@@ -60,6 +59,7 @@ class App extends React.Component {
   render () {
     return (
       <>
+        <title>CV</title>
         {this.state.isFocused ?
         <div className="blur" style={{display: 'block'}}></div>
         :
