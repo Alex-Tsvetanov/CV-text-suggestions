@@ -219,3 +219,48 @@ input {
 .error:hover, .error:focus {
     background-color: rgba(235, 87, 87, 0.66) !important;
 }
+.alerttexttitle {
+    text-align: left;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 20px;
+    
+    /* identical to box height, or 167% */
+    display: flex;
+    align-items: center;
+    
+    /* Dark Text */
+    color: #232528;
+}
+.alerttextignore {
+    width: 100% !important;
+    text-align: right !important;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 20px;
+    
+    /* identical to box height, or 167% */
+    display: flex;
+    align-items: center;
+    
+    /* Dark Text */
+    color: #232528;
+}
+.alerttextcontent {
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 20px;
+    
+    /* or 167% */
+    display: flex;
+    align-items: center;
+    
+    /* Dark Text */
+    color: #232528;
+}

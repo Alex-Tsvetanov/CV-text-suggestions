@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import Container from 'react-bootstrap/Container';
-import Form from 'react-bootstrap/Form'
-import FormControl from 'react-bootstrap/FormControl'
 import Button from 'react-bootstrap/Button'
-import Dropdown from 'react-bootstrap/Dropdown'
 import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import ButtonGroup from 'react-bootstrap/ButtonGroup'
-import Image, { propTypes } from 'react-bootstrap/Image'
+import Image from 'react-bootstrap/Image'
 
-import './CV.css';
+import './css/CV.css';
 import userphoto from './icons/user photo.svg'
 import phone from './icons/phone.svg'
 import website from './icons/website.svg'
@@ -22,51 +19,9 @@ import trash from './icons/trash.svg'
 
 import newId from './utils/newid';
 
-import { unmountComponentAtNode, render, unstable_renderSubtreeIntoContainer } from 'react-dom';
-
-const SectionTitle = (props) => (
-    <>
-        <div className="sectionTitle">
-            {props.children} <Image src={plus} style={{background: '#56BD94'}} onClick={props.add}></Image>
-        </div>
-    </>
-)
-
-const Section = (props) => (
-    <>
-        <Col sm="6" className="section">
-            <SectionTitle add={props.add}>{props.name}</SectionTitle>
-            {props.children}
-        </Col>
-    </>
-)
-
-const ExperienceItem = React.forwardRef((props, ref) => {
-    return (
-    <>
-    {
-    props.className != 'experienceDescription' ?
-            <input onClick={props.onClick} type="text" name={props.name} onChange={evt => props.callback(evt)} className={props.className} ref={ref} placeholder={props.children}></input>
-        :
-            <textarea onClick={props.onClick} type="text" name={props.name} onChange={evt => props.callback(evt)} className={props.className} ref={ref} placeholder={props.children}></textarea>
-    }
-    </>
-)})
-
-const ExperienceItemValue = (props) => {
-    return (
-    <>
-    {props.value == '' || props.value === undefined ?
-        <div onClick={props.onClick} className={props.className}>
-            {props.children}
-        </div>
-    :
-        <div onClick={props.onClick} className={props.className}>
-            {props.value}
-        </div>
-    }
-    </>
-)}
+import Section from './components/Section';
+import ExperienceItem from './components/ExperienceItem';
+import ExperienceItemValue from './components/ExperienceItemValue';
 
 class ExperienceEntity extends React.Component {
     constructor(props) {
@@ -80,11 +35,11 @@ class ExperienceEntity extends React.Component {
             period: this.data().period,
             location: this.data().location,
             description: this.data().description,
-            titleValue: '',
-            companyValue: '',
-            periodValue: '',
-            locationValue: '',
-            descriptionValue: '',
+            titleValue: this.f(this.data().title, 'Title'),
+            companyValue: this.f(this.data().company, 'Company name'),
+            periodValue: this.f(this.data().period, 'Date period'),
+            locationValue: this.f(this.data().location, 'Location'),
+            descriptionValue: this.f(this.data().description, 'Company description'),
         };
         this.id = props.data().id;
         this.setState (this.state);
@@ -94,22 +49,20 @@ class ExperienceEntity extends React.Component {
         this.save = this.save.bind(this);
         this.deleteElement = props.deleteElement;
         this.onInputchange = this.onInputchange.bind(this);
-        console.log ("EXP ID", props.data().id, this.id, 'DATA', this.data(), props.data());
+        //console.log ("EXP ID", props.data().id, this.id, 'DATA', this.data(), props.data());
     }
-    f = function (x) {
-        if (x !== undefined)
-        {
-            if (x.current !== undefined)
-            {
-                if (x.current.value !== undefined)
-                {
-                    return x.current.value;
-                }
-                return x.current;
-            }
-            return x;
+    f = function (x, y, z) {
+        //console.log ('F ', x, y, z);
+        if (y == 'value') {
+            if (x == undefined || x == null || x.length == 0)
+                return z;
+            else
+                return x;
         }
-        return '';
+        else if (x != undefined && x != null && x.current != undefined && x.current != null && x.current.value != undefined && x.current.value != null && x.current.value.length > 0)
+            return x.current.value;
+        else
+            return y;
     }
     styles = function () {
         if (this.state.isFocused) {
@@ -128,45 +81,47 @@ class ExperienceEntity extends React.Component {
     focus = function () {
         if (!this.state.isFocused) {
             this.props.onClick();
-            console.log (
+            /*console.log (
                 this.state.title       .current.value,'|',
                 this.state.company     .current.value,'|',
                 this.state.period      .current.value,'|',
                 this.state.location    .current.value,'|',
                 this.state.description .current.value,'|',
-            );
+            );*/
             this.state.isFocused = true;
             this.setState({
                 isFocused: true,
-                titleValue: this.f(this.state.title),
-                companyValue: this.f(this.state.company),
-                periodValue: this.f(this.state.period),
-                locationValue: this.f(this.state.location),
-                descriptionValue: this.f(this.state.description),
+                titleValue: this.f(this.state.title, 'Title'),
+                companyValue: this.f(this.state.company, 'Company name'),
+                periodValue: this.f(this.state.period, 'Date period'),
+                locationValue: this.f(this.state.location, 'Location'),
+                descriptionValue: this.f(this.state.description, 'Company description'),
             });
-            console.log (this.state);
+            this.forceUpdate();
+            //console.log (this.state);
         }
     }
     unfocus = function () {
         if (this.state.isFocused) {
             this.props.onClick();
-            console.log (
+            /*console.log (
                 this.state.title       .current.value,'|', 
                 this.state.company     .current.value,'|',
                 this.state.period      .current.value,'|',
                 this.state.location    .current.value,'|',
                 this.state.description .current.value,'|',
-            );
+            );*/
             this.state.isFocused = false;     
             this.setState({
                 isFocused: false,
-                titleValue: this.f(this.state.title),
-                companyValue: this.f(this.state.company),
-                periodValue: this.f(this.state.period),
-                locationValue: this.f(this.state.location),
-                descriptionValue: this.f(this.state.description),
+                titleValue: this.f(this.state.title, 'Title'),
+                companyValue: this.f(this.state.company, 'Company name'),
+                periodValue: this.f(this.state.period, 'Date period'),
+                locationValue: this.f(this.state.location, 'Location'),
+                descriptionValue: this.f(this.state.description, 'Company description'),
             });  
-            console.log (this.state);
+            this.forceUpdate();
+            //console.log (this.state);
         }
     }
 
@@ -181,7 +136,6 @@ class ExperienceEntity extends React.Component {
     }
 
     render = function () {
-        console.log (this.deleteElement, this.props.deleteElement);
         let items = <>
             <ExperienceItem name="titleValue" callback={this.onInputchange} onClick={this.focus} className="experienceTitle" ref={this.state.title}>Title</ExperienceItem>
             <ExperienceItem name="companyValue" callback={this.onInputchange} onClick={this.focus} className="experienceCompany" ref={this.state.company}>Company name</ExperienceItem>
@@ -190,11 +144,11 @@ class ExperienceEntity extends React.Component {
             <ExperienceItem name="descriptionValue" callback={this.onInputchange} onClick={this.focus} className="experienceDescription" ref={this.state.description}>Company description</ExperienceItem>
         </>
         let values = <>
-            <ExperienceItemValue value={this.f(this.state.titleValue)} onClick={this.focus} className="experienceTitle">Title</ExperienceItemValue>
-            <ExperienceItemValue value={this.f(this.state.companyValue)} onClick={this.focus} className="experienceCompany">Company name</ExperienceItemValue>
-            <Image src={date}></Image> <ExperienceItemValue value={this.f(this.state.periodValue)} onClick={this.focus} className="experiencePeriod">Date period</ExperienceItemValue>
-            <Image src={location}></Image> <ExperienceItemValue value={this.f(this.state.locationValue)} onClick={this.focus} className="experienceLocation">New York, NY</ExperienceItemValue>
-            <ExperienceItemValue value={this.f(this.state.descriptionValue)} onClick={this.focus} className="experienceDescription">Company description</ExperienceItemValue>
+            <ExperienceItemValue value={()=>this.state.titleValue} onClick={this.focus} className="experienceTitle"></ExperienceItemValue>
+            <ExperienceItemValue value={()=>this.state.companyValue} onClick={this.focus} className="experienceCompany"></ExperienceItemValue>
+            <Image src={date}></Image> <ExperienceItemValue value={()=>this.state.periodValue} onClick={this.focus} className="experiencePeriod"></ExperienceItemValue>
+            <Image src={location}></Image> <ExperienceItemValue value={()=>this.state.locationValue} onClick={this.focus} className="experienceLocation"></ExperienceItemValue>
+            <ExperienceItemValue value={()=>this.state.descriptionValue} className="experienceDescription"></ExperienceItemValue>
         </>
         return (
             <>
@@ -238,11 +192,9 @@ class CV extends React.Component {
             ExperienceEntities: [],
         };
         this.addExperience = this.addExperience.bind(this);
-        console.log (this.focus);
     }
 
     addExperience = function () {
-        console.log ('adding');
         this.setState({
             ExperienceEntities: this.state.ExperienceEntities.concat([{
                 id: newId(),
@@ -253,16 +205,14 @@ class CV extends React.Component {
                 description: React.createRef(),
             }])
         });
-        console.log (this.state.ExperienceEntities);
     }
 
     deleteElement = function (id) {
-        console.log ('id', id, 'element', document.getElementById(id));
         document.getElementById(id).remove(document.getElementById(id));
     }
 
     render() {
-        console.log (this.focus);
+        //console.log (this.focus)
         return (
             <>
                 <Container className="cv">
