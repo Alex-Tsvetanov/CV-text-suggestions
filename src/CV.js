@@ -127,7 +127,7 @@ class ExperienceEntity extends React.Component {
 
     onInputchange(event) {
         this.setState({
-          [event.target.name]: event.target.value
+            [event.target.name]: event.target.value
         });
     }
 
@@ -141,7 +141,7 @@ class ExperienceEntity extends React.Component {
             <ExperienceItem name="companyValue" callback={this.onInputchange} onClick={this.focus} className="experienceCompany" ref={this.state.company}>Company name</ExperienceItem>
             <Image src={date}></Image> <ExperienceItem name="periodValue" callback={this.onInputchange} onClick={this.focus} className="experiencePeriod" ref={this.state.period}>Date period</ExperienceItem>
             <Image src={location}></Image> <ExperienceItem name="locationValue" callback={this.onInputchange} onClick={this.focus} className="experienceLocation" ref={this.state.location}>New York, NY</ExperienceItem>
-            <ExperienceItem name="descriptionValue" callback={this.onInputchange} onClick={this.focus} className="experienceDescription" ref={this.state.description}>Company description</ExperienceItem>
+            <ExperienceItem value={()=>this.state.descriptionValue} name="descriptionValue" callback={this.onInputchange} onClick={this.focus} className="experienceDescription" ref={this.state.description}>Company description</ExperienceItem>
         </>
         let values = <>
             <ExperienceItemValue value={()=>this.state.titleValue} onClick={this.focus} className="experienceTitle"></ExperienceItemValue>

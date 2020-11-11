@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
 import newId from '../utils/newid';
+import Parser from 'html-react-parser';
 
 class ExperienceItemValue extends React.Component {
     constructor (props) {
@@ -25,10 +26,52 @@ class ExperienceItemValue extends React.Component {
         console.log (new_state, this.state);
         this.setState (new_state);
     }
-    getElements (text, type, new_errors, my_errors) {
+    splitText (text) {
+        let result = [], i = 0;
+        let stack = [];
+        while (i < text.length) {
+            if (text [i] == '<') { // tag
+                if (text [i + 1] == '/') { // closing
+                    let tag = '';
+                    for (i += 1 ; i < text.length && text [i] != '>' ; i += 1)
+                        tag += text [i];
+                    stack.pop();
+                }
+                else { //opening
+                    let tag = '';
+                    for (i += 1 ; i < text.length && text [i] != '>' ; i += 1)
+                        tag += text [i];
+                    stack.push(tag);
+                }
+                i += 1;
+            }
+            else { //plain text
+                while (i < text.length && text [i] != '<' && text [i] != '>') {
+                    let letter = '';
+                    for (let y = 0 ; y < stack.length ; y += 1)
+                        letter += '<' + stack [y] + '>';
+                    letter += text [i];
+                    for (let y = stack.length - 1 ; y >= 0 ; y -= 1)
+                        letter += '</' + stack [y] + '>';
+                    result.push({
+                        'char': text [i],
+                        'text': letter
+                    });
+                    i += 1;
+                }
+            }
+        }
+        return result;
+    }
+    getElements (html, type, new_errors, my_errors) {
+        console.log(this.splitText(html).map((x) => x ['char']).join(' '));
+        console.log(this.splitText(html).map((x) => x ['text']).join(' '));
+        let nonhtml = this.splitText(html).map((x) => x ['char']).join('');
+        let text = this.splitText(html).map((x) => x ['text']);
+        console.log (text);
         let errors;
         if (new_errors)
-            errors = API(text, type)
+            errors = API(nonhtml, type)
                             .map ((x) => { x ['ignore'] = false; return x; })
                             .sort((x, y) => (x.range[0] != y.range[0]) ? (x.range[0] - y.range[0]) : (y.range[1] - x.range[1]));
         else
@@ -73,24 +116,24 @@ class ExperienceItemValue extends React.Component {
                             }
                         >
                             <span className='error'>
-                                {string}
+                                {Parser(string)}
                             </span>
                         </OverlayTrigger>
                     </>
                     indexError += 1;
                 }
                 else {
-                    elements [elements.length] = <span>{text [indexText]}</span>
+                    elements [elements.length] = <>{Parser(text [indexText])}</>
                     indexText += 1;
                 }
             }
             else {
-                elements [elements.length] = <span>{text [indexText]}</span>
+                elements [elements.length] = <>{Parser(text [indexText])}</>
                 indexText += 1;
             }
         }
         return {
-            text: text,
+            text: html,
             errors: errors,
             elements: elements
         };

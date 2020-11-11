@@ -15,7 +15,7 @@
     padding: 15px 15px 15px 15px;
 }
 
-.cv *:not(.btn):not(img) {
+.cv *:not(.btn,img,.btn-normal,.btn-primary) {
     background-color: white;
 }
 
@@ -199,7 +199,7 @@ input {
     height: calc(100% - 2 * 38px);
 }
 
-.actions .btn-success {
+.actions .btn-success, .btn-normal .btn-success {
     background: #56BD94;
     color: white;
     border-radius: 30px 30px 30px 30px;
@@ -263,4 +263,10 @@ input {
     
     /* Dark Text */
     color: #232528;
+}
+
+.btn-normal.btn.btn-primary {
+    color: #fff !important;
+    background-color: #007bff !important;
+    border-color: #007bff !important;
 }
