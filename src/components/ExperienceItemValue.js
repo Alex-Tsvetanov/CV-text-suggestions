@@ -5,8 +5,10 @@ import Row from 'react-bootstrap/Row'
 import Col from 'react-bootstrap/Col'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 import Popover from 'react-bootstrap/Popover'
+import Image from 'react-bootstrap/Image'
 import newId from '../utils/newid';
 import Parser from 'html-react-parser';
+import menu from '../icons/menu.svg'
 
 class ExperienceItemValue extends React.Component {
     constructor (props) {
@@ -100,7 +102,7 @@ class ExperienceItemValue extends React.Component {
                                 <Popover.Title>
                                     <Row>
                                         <Col className="alerttexttitle" sm="8">
-                                            Content Improvement
+                                            <Image src={menu}></Image>&nbsp;&nbsp;Content Improvement
                                         </Col>
                                         <Col className="alerttextignore" sm="4">
                                         <input type="checkbox" onChange={()=>{this.ignore(x);}}></input> Ignore
